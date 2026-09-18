@@ -52,12 +52,12 @@
           <h2 id="weatherLocation" class="text-lg font-bold mt-1">আপনার লোকেশন সিঙ্ক করুন</h2>
           <p id="waterflowNote" class="text-xs text-blue-200 mt-0.5">ভারত ও নেপাল সীমান্তের উজানের পানিপ্রবাহ এবং স্থানীয় বৃষ্টিপাত ট্র্যাকার</p>
         </div>
-        <button onclick="fetchLiveWeather()" id="weatherBtn" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-4 py-2.5 rounded-xl backdrop-blur transition flex items-center gap-2 border border-white/20">
+        <button type="button" onclick="fetchLiveWeather()" id="weatherBtn" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-4 py-2.5 rounded-xl backdrop-blur transition flex items-center gap-2 border border-white/20 cursor-pointer">
           <span>📍</span> <span id="weatherBtnText">লাইভ আবহাওয়া যুক্ত করুন</span>
         </button>
       </div>
 
-      <!-- Live Stats Grid (Hidden initially) -->
+      <!-- Live Stats Grid -->
       <div id="weatherStats" class="hidden grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-4 border-t border-white/10 text-center">
         <div class="bg-white/10 rounded-xl p-2.5">
           <span class="text-[10px] text-blue-200 block uppercase">তাপমাত্রা</span>
@@ -68,7 +68,7 @@
           <span id="statHumidity" class="font-bold text-base">--</span>
         </div>
         <div class="bg-white/10 rounded-xl p-2.5">
-          <span class="text-[10px] text-blue-200 block uppercase">বৃষ্টির সম্ভাবনা</span>
+          <span class="text-[10px] text-blue-200 block uppercase">বৃষ্টিপাত</span>
           <span id="statRain" class="font-bold text-base">--</span>
         </div>
         <div class="bg-white/10 rounded-xl p-2.5">
@@ -134,7 +134,6 @@
           </div>
         </div>
 
-        <!-- Spray & Weather Guidance -->
         <div class="bg-indigo-50/60 rounded-2xl p-4 border border-indigo-200 mb-6">
           <h4 class="font-bold text-indigo-950 text-sm mb-1 text-indigo-800">🌦️ আবহাওয়া অনুযায়ী স্প্রে শিডিউল ও সতর্কতা</h4>
           <p id="spraySchedule" class="text-sm text-indigo-900 leading-relaxed"></p>
@@ -155,10 +154,10 @@
         </div>
 
         <div class="mt-8 pt-4 border-t border-stone-200 flex flex-wrap items-center justify-between gap-3 no-print">
-          <button onclick="speakReport()" class="flex items-center gap-2 text-xs font-bold bg-stone-100 hover:bg-stone-200 text-stone-800 px-4 py-2.5 rounded-xl border">
+          <button type="button" onclick="speakReport()" class="flex items-center gap-2 text-xs font-bold bg-stone-100 hover:bg-stone-200 text-stone-800 px-4 py-2.5 rounded-xl border">
             <span>🔊</span> <span>পরামর্শ বাংলায় শুনুন</span>
           </button>
-          <button onclick="window.print()" class="flex items-center gap-2 text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-xl shadow-sm">
+          <button type="button" onclick="window.print()" class="flex items-center gap-2 text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-xl shadow-sm">
             <span>📄</span> <span>ডিজিটাল কার্ড ডাউনলোড (PDF)</span>
           </button>
         </div>
@@ -168,14 +167,13 @@
   </main>
 
   <script>
-    const BACKEND_URL = "https://agrosense-backend.azanbro2020.workers.dev";[cite: 10]
+    const BACKEND_URL = "https://agrosense-backend.azanbro2020.workers.dev";
 
     let uploadedImageBase64 = null;
     let uploadedImageMimeType = "image/jpeg";
     let fullReportBengali = "";
     let currentWeatherData = null;
 
-    // ১. ওপেন-মেটিও এপিআই দিয়ে লাইভ আবহাওয়া ও লোকেশন সংগ্রহ (১০০% ফ্রি)
     function fetchLiveWeather() {
       const btnText = document.getElementById('weatherBtnText');
       if (!navigator.geolocation) {
@@ -184,13 +182,13 @@
       }
 
       btnText.innerText = "লোকেশন খোঁজা হচ্ছে...";
-      navigator.geolocation.getCurrentPosition(async (pos) => {
+      navigator.geolocation.getCurrentPosition(async function(pos) {
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
 
         btnText.innerText = "আবহাওয়া আনা হচ্ছে...";
         try {
-          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m`);
+          const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m");
           const data = await res.json();
 
           const temp = data.current.temperature_2m;
@@ -198,27 +196,26 @@
           const rain = data.current.precipitation;
           const wind = data.current.wind_speed_10m;
 
-          currentWeatherData = { lat, lon, temperature: temp, humidity, rain, wind };
+          currentWeatherData = { lat: lat, lon: lon, temperature: temp, humidity: humidity, rain: rain, wind: wind };
 
-          document.getElementById('statTemp').innerText = `${temp}°C`;
-          document.getElementById('statHumidity').innerText = `${humidity}%`;
-          document.getElementById('statRain').innerText = `${rain} mm`;
-          document.getElementById('statWind').innerText = `${wind} km/h`;
+          document.getElementById('statTemp').innerText = temp + "°C";
+          document.getElementById('statHumidity').innerText = humidity + "%";
+          document.getElementById('statRain').innerText = rain + " mm";
+          document.getElementById('statWind').innerText = wind + " km/h";
 
           document.getElementById('weatherStats').classList.remove('hidden');
-          document.getElementById('weatherLocation').innerText = `জিপিএস লোকেশন সিঙ্কড (${lat.toFixed(2)}°, ${lon.toFixed(2)}°)`;
+          document.getElementById('weatherLocation').innerText = "জিপিএস লোকেশন সিঙ্কড (" + lat.toFixed(2) + "°, " + lon.toFixed(2) + "°)";
           btnText.innerText = "আবহাওয়া আপডেট হয়েছে ✓";
         } catch (e) {
           alert("আবহাওয়া তথ্য লোড করা যায়নি।");
           btnText.innerText = "পুনরায় চেষ্টা করুন";
         }
-      }, () => {
-        alert("লোকেশন পারমিশন পাওয়া যায়নি। সাধারণ মোডে চলবে।");
+      }, function() {
+        alert("লোকেশন পারমিশন পাওয়া যায়নি। ব্রাউজার লোকেশন Allow করুন।");
         btnText.innerText = "লাইভ আবহাওয়া যুক্ত করুন";
       });
     }
 
-    // ২. ইমেজ প্রিভিউ হ্যান্ডলার
     document.getElementById('imageInput').addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -243,7 +240,6 @@
       document.getElementById("previewArea").classList.add("hidden");
     }
 
-    // ৩. এআই ব্যাকএন্ড সাবমিশন
     async function analyzeCropData() {
       const promptInput = document.getElementById('cropIssue');
       const promptText = promptInput ? promptInput.value.trim() : "";
@@ -289,10 +285,10 @@
 
         const list = document.getElementById('treatmentList');
         list.innerHTML = "";
-        result.treatments.forEach(t => {
+        result.treatments.forEach(function(t) {
           const li = document.createElement('li');
           li.className = "flex items-start gap-2";
-          li.innerHTML = `<span class="text-emerald-700 font-bold">✓</span> <span>${t}</span>`;
+          li.innerHTML = "<span class=\"text-emerald-700 font-bold\">✓</span> <span>" + t + "</span>";
           list.appendChild(li);
         });
 
@@ -301,7 +297,7 @@
         badge.className = "text-xs px-3.5 py-1 rounded-full font-bold uppercase " + 
           (result.urgency === 'জরুরি' ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800');
 
-        fullReportBengali = `রোগের কারণ: ${result.diagnosis}। বন্যা ঝুঁকি: ${result.floodVulnerability}। স্প্রে শিডিউল: ${result.spraySchedule}। প্রতিকার: ${result.treatments.join('. ')}`;
+        fullReportBengali = "রোগের কারণ: " + result.diagnosis + "। বন্যা ঝুঁকি: " + result.floodVulnerability + "। স্প্রে শিডিউল: " + result.spraySchedule + "। প্রতিকার: " + result.treatments.join('. ');
 
         outputCard.classList.remove('hidden');
         outputCard.scrollIntoView({ behavior: 'smooth' });
