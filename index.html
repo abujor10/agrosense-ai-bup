@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AgroSense AI — আধুনিক ফসল ডাক্তার ও বাজার সহকারী</title>
+  <title>AgroSense AI — ক্লাইমেট-রেজিলিয়েন্ট ফসল ডাক্তার ও বন্যা পূর্বাভাস</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,7 @@
 <body class="bg-[#FAF8F5] text-stone-900 min-h-screen antialiased">
 
   <div class="bg-emerald-900 text-emerald-100 text-xs py-2 px-4 text-center font-medium no-print">
-    🌾 BUP CSE Fest 2026: ফুল-স্ট্যাক এআই আর্কিটেকচার (Secure Serverless Backend)
+    🌊 BUP CSE Fest 2026: ক্লাইমেট-স্মার্ট এগ্রি-টেলিজেন্স ও উজানের পানিপ্রবাহ মনিটরিং
   </div>
 
   <header class="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-30 no-print">
@@ -32,20 +32,59 @@
         </div>
         <div>
           <h1 class="font-bold text-lg leading-none text-stone-900">AgroSense AI</h1>
-          <span class="text-[11px] font-semibold text-emerald-700 uppercase tracking-wider">Zero-Config Field Assistant</span>
+          <span class="text-[11px] font-semibold text-emerald-700 uppercase tracking-wider">Climate & Agro Resilience</span>
         </div>
       </div>
-      <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-bold">Cloudflare Backend Connected</span>
+      <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-bold">Live Weather Sync</span>
     </div>
   </header>
 
   <main class="max-w-4xl mx-auto px-6 py-8">
+    
+    <!-- Real-time Weather & Hydrology Banner -->
+    <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-emerald-900 text-white rounded-3xl p-6 shadow-xl mb-8 no-print border border-blue-800/40">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🛰️</span>
+            <span class="text-xs uppercase font-bold tracking-widest text-blue-200">হাইপারলোকাল আবহাওয়া ও নদীর বেসিন মনিটর</span>
+          </div>
+          <h2 id="weatherLocation" class="text-lg font-bold mt-1">আপনার লোকেশন সিঙ্ক করুন</h2>
+          <p id="waterflowNote" class="text-xs text-blue-200 mt-0.5">ভারত ও নেপাল সীমান্তের উজানের পানিপ্রবাহ এবং স্থানীয় বৃষ্টিপাত ট্র্যাকার</p>
+        </div>
+        <button onclick="fetchLiveWeather()" id="weatherBtn" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-4 py-2.5 rounded-xl backdrop-blur transition flex items-center gap-2 border border-white/20">
+          <span>📍</span> <span id="weatherBtnText">লাইভ আবহাওয়া যুক্ত করুন</span>
+        </button>
+      </div>
+
+      <!-- Live Stats Grid (Hidden initially) -->
+      <div id="weatherStats" class="hidden grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-4 border-t border-white/10 text-center">
+        <div class="bg-white/10 rounded-xl p-2.5">
+          <span class="text-[10px] text-blue-200 block uppercase">তাপমাত্রা</span>
+          <span id="statTemp" class="font-bold text-base">--</span>
+        </div>
+        <div class="bg-white/10 rounded-xl p-2.5">
+          <span class="text-[10px] text-blue-200 block uppercase">আর্দ্রতা</span>
+          <span id="statHumidity" class="font-bold text-base">--</span>
+        </div>
+        <div class="bg-white/10 rounded-xl p-2.5">
+          <span class="text-[10px] text-blue-200 block uppercase">বৃষ্টির সম্ভাবনা</span>
+          <span id="statRain" class="font-bold text-base">--</span>
+        </div>
+        <div class="bg-white/10 rounded-xl p-2.5">
+          <span class="text-[10px] text-blue-200 block uppercase">বাতাসের গতি</span>
+          <span id="statWind" class="font-bold text-base">--</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Dashboard -->
     <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-stone-200/70 mb-8 no-print">
       <div class="space-y-5">
         
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">ফসলের সমস্যা বা পাইকারি দর</label>
-          <textarea id="cropIssue" rows="3" placeholder="ফসলের নাম, লক্ষণ অথবা স্থানীয় পাইকারি দর লিখুন..."
+          <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">ফসলের লক্ষণ বা পাইকারি দর</label>
+          <textarea id="cropIssue" rows="3" placeholder="ফসলের নাম, পাতার সমস্যা অথবা স্থানীয় ফড়িয়ার প্রস্তাবিত দর লিখুন..."
                     class="w-full text-sm p-3.5 rounded-2xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-stone-50/40"></textarea>
         </div>
 
@@ -57,7 +96,7 @@
             <div id="previewArea" class="hidden mt-4 pt-4 border-t border-stone-200 flex items-center gap-4">
               <img id="imagePreview" src="" alt="Preview" class="h-24 w-24 rounded-xl object-cover border border-stone-300 shadow-sm">
               <div>
-                <p class="text-xs font-bold text-emerald-700">ছবি লোড হয়েছে</p>
+                <p class="text-xs font-bold text-emerald-700">ছবি প্রস্তুত</p>
                 <button type="button" onclick="clearImage()" class="text-xs text-red-600 font-bold hover:underline mt-1">ছবি বাদ দিন</button>
               </div>
             </div>
@@ -66,7 +105,7 @@
 
         <button type="button" onclick="analyzeCropData()" id="submitBtn" 
                 class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-2xl transition shadow-lg flex justify-center items-center gap-2 cursor-pointer">
-          <span id="btnText">স্বয়ংক্রিয় এআই বিশ্লেষণ</span>
+          <span id="btnText">স্বয়ংক্রিয় ক্লাইমেট ও এআই বিশ্লেষণ</span>
         </button>
       </div>
     </div>
@@ -77,8 +116,8 @@
         
         <div class="flex items-center justify-between border-b border-stone-200 pb-4 mb-6">
           <div>
-            <span class="text-xs font-bold text-emerald-800 uppercase tracking-widest">Digital Crop Health Passport</span>
-            <h3 class="font-bold text-2xl text-stone-900 mt-0.5">মাঠ মূল্যায়ন ও প্রেসক্রিপশন</h3>
+            <span class="text-xs font-bold text-emerald-800 uppercase tracking-widest">Climate-Resilient Health Card</span>
+            <h3 class="font-bold text-2xl text-stone-900 mt-0.5">মাঠ মূল্যায়ন ও জলবায়ু সুরক্ষা রিপোর্ট</h3>
           </div>
           <span id="urgencyBadge" class="text-xs px-3.5 py-1 rounded-full font-bold uppercase"></span>
         </div>
@@ -89,22 +128,35 @@
             <p id="diseaseDiagnosis" class="text-sm text-stone-700 leading-relaxed"></p>
           </div>
 
-          <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200">
-            <h4 class="font-bold text-amber-950 text-sm mb-1 text-amber-800">⚖️ বাজার দর ও সতর্কতা</h4>
-            <p id="marketAdvice" class="text-sm text-amber-900 leading-relaxed"></p>
+          <div class="bg-blue-50/60 rounded-2xl p-4 border border-blue-200">
+            <h4 class="font-bold text-blue-950 text-sm mb-1 text-blue-800">🌊 উজানের পানিপ্রবাহ ও আকস্মিক বন্যা ঝুঁকি</h4>
+            <p id="floodVulnerability" class="text-sm text-blue-900 leading-relaxed"></p>
           </div>
         </div>
 
-        <div>
-          <h4 class="font-bold text-stone-900 text-sm mb-2 text-emerald-800">💊 চিকিৎসা নির্দেশিকা</h4>
-          <div class="bg-emerald-50/50 rounded-2xl p-4 border border-emerald-100">
-            <ul id="treatmentList" class="space-y-1.5 text-sm text-stone-700"></ul>
+        <!-- Spray & Weather Guidance -->
+        <div class="bg-indigo-50/60 rounded-2xl p-4 border border-indigo-200 mb-6">
+          <h4 class="font-bold text-indigo-950 text-sm mb-1 text-indigo-800">🌦️ আবহাওয়া অনুযায়ী স্প্রে শিডিউল ও সতর্কতা</h4>
+          <p id="spraySchedule" class="text-sm text-indigo-900 leading-relaxed"></p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+          <div>
+            <h4 class="font-bold text-stone-900 text-sm mb-2 text-emerald-800">💊 প্রস্তাবিত চিকিৎসা নির্দেশিকা</h4>
+            <div class="bg-emerald-50/50 rounded-2xl p-4 border border-emerald-100">
+              <ul id="treatmentList" class="space-y-1.5 text-sm text-stone-700"></ul>
+            </div>
+          </div>
+
+          <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+            <h4 class="font-bold text-amber-950 text-sm mb-1 text-amber-800">⚖️ বাজার দর ও মধ্যস্বত্বভোগী সতর্কতা</h4>
+            <p id="marketAdvice" class="text-sm text-amber-900 leading-relaxed"></p>
           </div>
         </div>
 
         <div class="mt-8 pt-4 border-t border-stone-200 flex flex-wrap items-center justify-between gap-3 no-print">
           <button onclick="speakReport()" class="flex items-center gap-2 text-xs font-bold bg-stone-100 hover:bg-stone-200 text-stone-800 px-4 py-2.5 rounded-xl border">
-            <span>🔊</span> <span>পরামর্শ বাংলায় শুনুন</span>
+            <span>🔊</span> <span>পরামর্শ বাংলায় শুনুন</span>
           </button>
           <button onclick="window.print()" class="flex items-center gap-2 text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-xl shadow-sm">
             <span>📄</span> <span>ডিজিটাল কার্ড ডাউনলোড (PDF)</span>
@@ -116,12 +168,57 @@
   </main>
 
   <script>
-    const BACKEND_URL = "https://agrosense-backend.azanbro2020.workers.dev";
+    const BACKEND_URL = "https://agrosense-backend.azanbro2020.workers.dev";[cite: 10]
 
     let uploadedImageBase64 = null;
     let uploadedImageMimeType = "image/jpeg";
     let fullReportBengali = "";
+    let currentWeatherData = null;
 
+    // ১. ওপেন-মেটিও এপিআই দিয়ে লাইভ আবহাওয়া ও লোকেশন সংগ্রহ (১০০% ফ্রি)
+    function fetchLiveWeather() {
+      const btnText = document.getElementById('weatherBtnText');
+      if (!navigator.geolocation) {
+        alert("আপনার ব্রাউজারে লোকেশন সাপোর্ট করে না।");
+        return;
+      }
+
+      btnText.innerText = "লোকেশন খোঁজা হচ্ছে...";
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+
+        btnText.innerText = "আবহাওয়া আনা হচ্ছে...";
+        try {
+          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m`);
+          const data = await res.json();
+
+          const temp = data.current.temperature_2m;
+          const humidity = data.current.relative_humidity_2m;
+          const rain = data.current.precipitation;
+          const wind = data.current.wind_speed_10m;
+
+          currentWeatherData = { lat, lon, temperature: temp, humidity, rain, wind };
+
+          document.getElementById('statTemp').innerText = `${temp}°C`;
+          document.getElementById('statHumidity').innerText = `${humidity}%`;
+          document.getElementById('statRain').innerText = `${rain} mm`;
+          document.getElementById('statWind').innerText = `${wind} km/h`;
+
+          document.getElementById('weatherStats').classList.remove('hidden');
+          document.getElementById('weatherLocation').innerText = `জিপিএস লোকেশন সিঙ্কড (${lat.toFixed(2)}°, ${lon.toFixed(2)}°)`;
+          btnText.innerText = "আবহাওয়া আপডেট হয়েছে ✓";
+        } catch (e) {
+          alert("আবহাওয়া তথ্য লোড করা যায়নি।");
+          btnText.innerText = "পুনরায় চেষ্টা করুন";
+        }
+      }, () => {
+        alert("লোকেশন পারমিশন পাওয়া যায়নি। সাধারণ মোডে চলবে।");
+        btnText.innerText = "লাইভ আবহাওয়া যুক্ত করুন";
+      });
+    }
+
+    // ২. ইমেজ প্রিভিউ হ্যান্ডলার
     document.getElementById('imageInput').addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -137,10 +234,6 @@
         document.getElementById("previewArea").classList.remove("hidden");
       };
 
-      reader.onerror = function() {
-        alert("ছবি রিড করতে সমস্যা হয়েছে!");
-      };
-
       reader.readAsDataURL(file);
     });
 
@@ -150,6 +243,7 @@
       document.getElementById("previewArea").classList.add("hidden");
     }
 
+    // ৩. এআই ব্যাকএন্ড সাবমিশন
     async function analyzeCropData() {
       const promptInput = document.getElementById('cropIssue');
       const promptText = promptInput ? promptInput.value.trim() : "";
@@ -157,13 +251,13 @@
       const btnText = document.getElementById('btnText');
       const outputCard = document.getElementById('outputCard');
 
-      if (!promptText && !uploadedImageBase64) {
-        alert("অনুগ্রহ করে ফসলের লক্ষণ লিখুন অথবা একটি ছবি নির্বাচন করুন।");
+      if (!promptText && !uploadedImageBase64 && !currentWeatherData) {
+        alert("অনুগ্রহ করে ফসলের লক্ষণ লিখুন, ছবি দিন অথবা আবহাওয়া সিঙ্ক করুন।");
         return;
       }
 
       btn.disabled = true;
-      btnText.innerText = "বিশ্লেষণ করা হচ্ছে...";
+      btnText.innerText = "জলবায়ু ও এআই বিশ্লেষণ চলছে...";
 
       try {
         const response = await fetch(BACKEND_URL, {
@@ -172,7 +266,8 @@
           body: JSON.stringify({
             promptText: promptText,
             imageBase64: uploadedImageBase64,
-            mimeType: uploadedImageMimeType
+            mimeType: uploadedImageMimeType,
+            weatherData: currentWeatherData
           })
         });
 
@@ -188,6 +283,8 @@
         const result = JSON.parse(text);
 
         document.getElementById('diseaseDiagnosis').innerText = result.diagnosis;
+        document.getElementById('floodVulnerability').innerText = result.floodVulnerability;
+        document.getElementById('spraySchedule').innerText = result.spraySchedule;
         document.getElementById('marketAdvice').innerText = result.marketAnalysis;
 
         const list = document.getElementById('treatmentList');
@@ -204,7 +301,7 @@
         badge.className = "text-xs px-3.5 py-1 rounded-full font-bold uppercase " + 
           (result.urgency === 'জরুরি' ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800');
 
-        fullReportBengali = `রোগের কারণ: ${result.diagnosis}। প্রতিকার: ${result.treatments.join('. ')}। বাজার বিশ্লেষণ: ${result.marketAnalysis}`;
+        fullReportBengali = `রোগের কারণ: ${result.diagnosis}। বন্যা ঝুঁকি: ${result.floodVulnerability}। স্প্রে শিডিউল: ${result.spraySchedule}। প্রতিকার: ${result.treatments.join('. ')}`;
 
         outputCard.classList.remove('hidden');
         outputCard.scrollIntoView({ behavior: 'smooth' });
@@ -214,7 +311,7 @@
         alert("সমস্যা দেখা দিয়েছে: " + err.message);
       } finally {
         btn.disabled = false;
-        btnText.innerText = "স্বয়ংক্রিয় এআই বিশ্লেষণ";
+        btnText.innerText = "স্বয়ংক্রিয় ক্লাইমেট ও এআই বিশ্লেষণ";
       }
     }
 
