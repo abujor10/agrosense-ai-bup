@@ -116,13 +116,12 @@
   </main>
 
   <script>
-    const BACKEND_URL = "https://agrosense-backend.azanbro2020.workers.dev";[cite: 10]
+    const BACKEND_URL = "https://agrosense-backend.azanbro2020.workers.dev";
 
     let uploadedImageBase64 = null;
     let uploadedImageMimeType = "image/jpeg";
     let fullReportBengali = "";
 
-    // সরাসরি ইভেন্ট লিসেনার দিয়ে ফাইল রিড করা
     document.getElementById('imageInput').addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (!file) return;
