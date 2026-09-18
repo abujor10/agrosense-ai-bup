@@ -3,89 +3,197 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AgroSense AI - কৃষি পরামর্শ ও বাজার দর</title>
+  <title>AgroSense AI — আধুনিক ফসল ডাক্তার ও বাজার সহকারী</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; }
   </style>
 </head>
-<body class="bg-stone-50 text-stone-800 min-h-screen">
+<body class="bg-[#FAF8F5] text-stone-900 min-h-screen antialiased selection:bg-emerald-200">
 
-  <!-- Header -->
-  <header class="border-b border-stone-200 bg-white/80 backdrop-blur sticky top-0 z-10">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl">🌱</span>
-        <span class="font-bold text-xl text-emerald-800">AgroSense AI</span>
+  <!-- Top Announcement Bar -->
+  <div class="bg-emerald-900 text-emerald-100 text-xs py-2 px-4 text-center font-medium tracking-wide">
+    🌾 BUP CSE Fest 2026: এআই-চালিত স্মার্ট কৃষি ও ন্যায্য বাজার নেটওয়ার্ক
+  </div>
+
+  <!-- Navbar -->
+  <header class="bg-white/80 backdrop-blur-md border-b border-stone-200/80 sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-emerald-700 flex items-center justify-center text-white text-xl shadow-md shadow-emerald-700/20">
+          🌿
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-none text-stone-900">AgroSense</h1>
+          <span class="text-[11px] font-semibold text-emerald-700 tracking-wider uppercase">Smart Agro Advisor</span>
+        </div>
       </div>
-      <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-medium">BUP Hackathon Prototype</span>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          লাইভ প্রোটোটাইপ
+        </span>
+      </div>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-6 py-10">
-    <!-- Input Card -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-stone-200 mb-8">
-      <h2 class="text-lg font-bold text-stone-900 mb-2">ফসলের সমস্যা বা বাজার দর লিখুন</h2>
-      <p class="text-sm text-stone-500 mb-4">লক্ষণ, ফসলের নাম বা ফড়িয়াদের প্রস্তাবিত পাইকারি দর বিস্তারিত লিখুন।</p>
+  <!-- Hero Section -->
+  <section class="max-w-4xl mx-auto px-6 pt-10 pb-4 text-center">
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-stone-900 tracking-tight leading-tight mb-3">
+      ফসলের রোগ শনাক্তকরণ ও সঠিক বাজার পরামর্শ
+    </h2>
+    <p class="text-base text-stone-600 max-w-2xl mx-auto leading-relaxed">
+      আক্রান্ত পাতা বা কাণ্ডের ছবি তুলুন অথবা সমস্যার বিবরণ দিন। এআই বিশ্লেষণ করে তাৎক্ষণিক সঠিক চিকিৎসা ও মধ্যস্বত্বভোগীদের সিন্ডিকেট থেকে সুরক্ষার উপায় জানিয়ে দেবে।
+    </p>
+  </section>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-6 pb-20">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-stone-200/50 border border-stone-200/70 mb-10">
       
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">আপনার API Key (Gemini)</label>
-          <input id="apiKey" type="password" placeholder="AI Studio থেকে পাওয়া Gemini API Key দিন" 
-                 class="w-full text-sm p-3 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600">
+      <div class="space-y-6">
+        <!-- API Key Input -->
+        <div class="bg-stone-50 rounded-2xl p-4 border border-stone-200/60">
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-stone-700">Gemini API Key</label>
+            <span class="text-[11px] text-stone-400">আপনার ব্রাউজারেই সুরক্ষিত থাকে</span>
+          </div>
+          <input id="apiKey" type="password" placeholder="AI Studio থেকে পাওয়া ফ্রি API Key পেস্ট করুন..." 
+                 class="w-full text-sm px-4 py-2.5 rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600 transition shadow-inner">
         </div>
 
+        <!-- Problem Description -->
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">সমস্যার বিবরণ</label>
-          <textarea id="cropIssue" rows="4" placeholder="উদাহরণ: টমেটো গাছের পাতা হলুদ হয়ে পোকা উড়ছে..."
-                    class="w-full text-sm p-3 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"></textarea>
+          <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
+            সমস্যার বিবরণ বা বাজার দর
+          </label>
+          <textarea id="cropIssue" rows="3" 
+                    placeholder="যেমন: টমেটো গাছের পাতা নিচে হলুদ হচ্ছে এবং সাদা পোকা উড়ছে। অথবা: ফড়িয়া প্রতি মণ আলু ৪৫০ টাকায় কিনতে চাচ্ছে..."
+                    class="w-full text-sm p-4 rounded-2xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 transition bg-white leading-relaxed"></textarea>
         </div>
 
+        <!-- Image Upload Area -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
+            ফসলের ছবি যুক্ত করুন (ঐচ্ছিক কিন্তু কার্যকর)
+          </label>
+          <div class="border-2 border-dashed border-stone-300 hover:border-emerald-500 transition rounded-2xl p-6 text-center cursor-pointer bg-stone-50/50 relative" onclick="document.getElementById('imageInput').click()">
+            <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImagePreview(event)">
+            <div id="uploadPlaceholder" class="space-y-2">
+              <div class="text-3xl text-stone-400">📷</div>
+              <p class="text-sm font-semibold text-stone-700">ক্লিক করে পাতার ছবি আপলোড করুন</p>
+              <p class="text-xs text-stone-400">JPG, PNG বা WebP ফরম্যাট সাপোর্টেড</p>
+            </div>
+            <div id="imagePreviewContainer" class="hidden flex-col items-center gap-2">
+              <img id="imagePreview" src="" alt="Crop Preview" class="max-h-48 rounded-xl object-contain shadow-md border border-stone-200">
+              <button type="button" onclick="removeImage(event)" class="text-xs text-red-600 font-semibold hover:underline">ছবি পরিবর্তন করুন</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Button -->
         <button onclick="analyzeCropData()" id="submitBtn" 
-                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 rounded-xl transition duration-200 shadow-sm flex justify-center items-center gap-2">
-          <span>পরামর্শ বিশ্লেষণ করুন</span>
+                class="w-full bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] text-white font-bold py-4 rounded-2xl transition duration-200 shadow-lg shadow-emerald-700/25 flex justify-center items-center gap-2 text-base">
+          <span>পরামর্শ ও রোগ বিশ্লেষণ করুন</span>
         </button>
       </div>
+
     </div>
 
-    <!-- Output Card -->
-    <div id="outputCard" class="hidden bg-white rounded-2xl p-6 shadow-sm border border-stone-200">
-      <div class="flex items-center justify-between mb-4 border-b border-stone-100 pb-3">
-        <h3 class="font-bold text-lg text-stone-900">AI বিশ্লেষণ ফলাফল</h3>
-        <span id="urgencyBadge" class="text-xs px-3 py-1 rounded-full font-semibold"></span>
-      </div>
-
-      <div class="space-y-4 text-sm">
-        <div>
-          <h4 class="font-semibold text-stone-700">সম্ভাব্য কারণ ও রোগ নির্ণয়:</h4>
-          <p id="diseaseDiagnosis" class="text-stone-600 mt-1"></p>
+    <!-- Output Dashboard (Hidden by default) -->
+    <div id="outputCard" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-stone-200/50 border border-stone-200/70">
+        <div class="flex items-center justify-between border-b border-stone-100 pb-4 mb-6">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">📋</span>
+            <div>
+              <h3 class="font-bold text-xl text-stone-900 leading-none">বিশেষজ্ঞ বিশ্লেষণ রিপোর্ট</h3>
+              <span class="text-xs text-stone-500 font-medium">স্বয়ংক্রিয় এগ্রোনমি ইঞ্জিন দ্বারা প্রস্তুত</span>
+            </div>
+          </div>
+          <span id="urgencyBadge" class="text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider"></span>
         </div>
 
-        <div>
-          <h4 class="font-semibold text-stone-700">প্রস্তাবিত সমাধান ও চিকিৎসা:</h4>
-          <ul id="treatmentList" class="list-disc pl-5 text-stone-600 mt-1 space-y-1"></ul>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Diagnosis Card -->
+          <div class="bg-stone-50/80 rounded-2xl p-5 border border-stone-200/60">
+            <h4 class="font-bold text-stone-900 text-sm flex items-center gap-2 mb-2">
+              <span class="text-emerald-700">🔍</span> সম্ভাব্য রোগ ও ক্ষতির কারণ
+            </h4>
+            <p id="diseaseDiagnosis" class="text-sm text-stone-700 leading-relaxed"></p>
+          </div>
+
+          <!-- Market Alert Card -->
+          <div class="bg-amber-50/70 rounded-2xl p-5 border border-amber-200/60">
+            <h4 class="font-bold text-amber-950 text-sm flex items-center gap-2 mb-2">
+              <span class="text-amber-700">⚖️</span> বাজার মূল্য বিশ্লেষণ ও সতর্কতা
+            </h4>
+            <p id="marketAdvice" class="text-sm text-amber-900 leading-relaxed"></p>
+          </div>
         </div>
 
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
-          <h4 class="font-semibold text-amber-900">বাজার দর ও সতর্কতা:</h4>
-          <p id="marketAdvice" class="text-amber-800 mt-1"></p>
+        <!-- Treatment Steps -->
+        <div class="mt-6">
+          <h4 class="font-bold text-stone-900 text-sm flex items-center gap-2 mb-3">
+            <span class="text-emerald-700">💊</span> প্রস্তাবিত জৈব ও রাসায়নিক চিকিৎসা ধাপ
+          </h4>
+          <div class="bg-emerald-50/50 rounded-2xl p-5 border border-emerald-100">
+            <ul id="treatmentList" class="space-y-2 text-sm text-stone-700"></ul>
+          </div>
         </div>
+
       </div>
     </div>
   </main>
 
+  <!-- Script -->
   <script>
-    async function callGeminiEndpoint(modelName, apiKey, prompt) {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
-      });
-      return await response.json();
+    let uploadedImageBase64 = null;
+    let uploadedImageMimeType = null;
+
+    function handleImagePreview(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      uploadedImageMimeType = file.type;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        uploadedImageBase64 = e.target.result.split(',')[1];
+        document.getElementById('imagePreview').src = e.target.result;
+        document.getElementById('uploadPlaceholder').classList.add('hidden');
+        document.getElementById('imagePreviewContainer').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeImage(event) {
+      event.stopPropagation();
+      uploadedImageBase64 = null;
+      uploadedImageMimeType = null;
+      document.getElementById('imageInput').value = "";
+      document.getElementById('uploadPlaceholder').classList.remove('hidden');
+      document.getElementById('imagePreviewContainer').classList.add('hidden');
+    }
+
+    async function getAvailableModel(apiKey) {
+      try {
+        const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        const listData = await listRes.json();
+        if (listData.models && listData.models.length > 0) {
+          const supported = listData.models.find(m => 
+            m.supportedGenerationMethods && 
+            m.supportedGenerationMethods.includes("generateContent") &&
+            (m.name.includes("flash") || m.name.includes("gemini"))
+          );
+          if (supported) return supported.name;
+        }
+      } catch (e) {
+        console.warn("Auto-detect failed, using standard fallback.");
+      }
+      return "models/gemini-2.5-flash";
     }
 
     async function analyzeCropData() {
@@ -94,47 +202,62 @@
       const btn = document.getElementById('submitBtn');
       const outputCard = document.getElementById('outputCard');
 
-      if (!apiKey || !promptText) {
-        alert("দয়া করে API Key এবং সমস্যার বিবরণ দিন।");
+      if (!apiKey) {
+        alert("অনুগ্রহ করে আপনার Gemini API Key প্রদান করুন।");
+        return;
+      }
+      if (!promptText && !uploadedImageBase64) {
+        alert("অনুগ্রহ করে সমস্যার বিবরণ লিখুন অথবা একটি ছবি আপলোড করুন।");
         return;
       }
 
       btn.disabled = true;
-      btn.innerText = "বিশ্লেষণ করা হচ্ছে...";
+      btn.innerText = "কৃষি বিশেষজ্ঞ এআই বিশ্লেষণ করছে...";
 
-      const prompt = `You are an expert Agro AI in Bangladesh. Analyze this crop issue or price query: "${promptText}".
-Output ONLY valid raw JSON (no backticks, no markdown) in this exact schema:
+      const prompt = `You are a leading Agricultural Extension Specialist and Agricultural Economist in Bangladesh.
+Analyze the provided crop symptom/image and market query.
+Strictly return ONLY raw JSON without markdown or codeblocks matching this exact schema:
 {
-  "urgency": "Normal",
-  "diagnosis": "সমস্যার কারণ ও রোগ বাংলায়",
-  "treatments": ["পদক্ষেপ ১", "পদক্ষেপ ২"],
-  "marketAnalysis": "বাজার দর বিশ্লেষণ বাংলায়"
+  "urgency": "স্বাভাবিক" | "মাঝারি" | "জরুরি",
+  "diagnosis": "সম্ভাব্য কারণ, রোগের নাম ও লক্ষণ বিস্তারিত বাংলায়",
+  "treatments": ["কার্যকর পদক্ষেপ ১ (জৈব বা রাসায়নিক মাত্রা)", "কার্যকর পদক্ষেপ ২ (প্রয়োজনীয় স্প্রে বা সার)"],
+  "marketAnalysis": "বাজার দর পর্যবেক্ষণ ও মধ্যস্বত্বভোগী সম্পর্কিত পরামর্শ বাংলায়"
 }`;
 
       try {
-        // মডেল ফলব্যাক লিস্ট (একটি না পেলে স্বয়ংক্রিয়ভাবে পরেরটি ট্রাই করবে)
-        const models = ['gemini-1.5-flash-latest', 'gemini-1.5-pro-latest', 'gemini-pro'];
-        let data = null;
-        let lastError = null;
+        const targetModel = await getAvailableModel(apiKey);
+        const url = `https://generativelanguage.googleapis.com/v1beta/${targetModel}:generateContent?key=${apiKey}`;
 
-        for (const model of models) {
-          const res = await callGeminiEndpoint(model, apiKey, prompt);
-          if (res.candidates && res.candidates[0]?.content?.parts?.[0]?.text) {
-            data = res;
-            break;
-          } else if (res.error) {
-            lastError = res.error.message;
-          }
+        const parts = [{ text: prompt }];
+        if (promptText) {
+          parts.push({ text: `Farmer description: ${promptText}` });
+        }
+        if (uploadedImageBase64) {
+          parts.push({
+            inline_data: {
+              mime_type: uploadedImageMimeType,
+              data: uploadedImageBase64
+            }
+          });
         }
 
-        if (!data) {
-          throw new Error(lastError || "সবগুলো মডেলেই রিকোয়েস্ট ব্যর্থ হয়েছে। API Key সঠিক কিনা যাচাই করুন।");
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts }] })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error.message);
         }
 
         let text = data.candidates[0].content.parts[0].text;
         text = text.replace(/```json/g, "").replace(/```/g, "").trim();
         const result = JSON.parse(text);
 
+        // UI আপডেট
         document.getElementById('diseaseDiagnosis').innerText = result.diagnosis;
         document.getElementById('marketAdvice').innerText = result.marketAnalysis;
 
@@ -142,22 +265,30 @@ Output ONLY valid raw JSON (no backticks, no markdown) in this exact schema:
         list.innerHTML = "";
         result.treatments.forEach(t => {
           const li = document.createElement('li');
-          li.innerText = t;
+          li.className = "flex items-start gap-2";
+          li.innerHTML = `<span class="text-emerald-600 font-bold">✓</span> <span>${t}</span>`;
           list.appendChild(li);
         });
 
         const badge = document.getElementById('urgencyBadge');
         badge.innerText = result.urgency;
-        badge.className = "text-xs px-3 py-1 rounded-full font-semibold " + 
-          (result.urgency === 'Critical' ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800');
+        if (result.urgency === 'জরুরি') {
+          badge.className = "text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider bg-red-100 text-red-800 border border-red-200";
+        } else if (result.urgency === 'মাঝারি') {
+          badge.className = "text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-200";
+        } else {
+          badge.className = "text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200";
+        }
 
         outputCard.classList.remove('hidden');
+        outputCard.scrollIntoView({ behavior: 'smooth' });
+
       } catch (err) {
         console.error(err);
         alert("সমস্যা: " + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerText = "পরামর্শ বিশ্লেষণ করুন";
+        btn.innerText = "পরামর্শ ও রোগ বিশ্লেষণ করুন";
       }
     }
   </script>
