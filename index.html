@@ -178,24 +178,6 @@
       document.getElementById('imagePreviewContainer').classList.add('hidden');
     }
 
-    async function getAvailableModel(apiKey) {
-      try {
-        const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-        const listData = await listRes.json();
-        if (listData.models && listData.models.length > 0) {
-          const supported = listData.models.find(m => 
-            m.supportedGenerationMethods && 
-            m.supportedGenerationMethods.includes("generateContent") &&
-            (m.name.includes("flash") || m.name.includes("gemini"))
-          );
-          if (supported) return supported.name;
-        }
-      } catch (e) {
-        console.warn("Auto-detect failed, using standard fallback.");
-      }
-      return "models/gemini-2.5-flash";
-    }
-
     async function analyzeCropData() {
       const apiKey = document.getElementById('apiKey').value.trim();
       const promptText = document.getElementById('cropIssue').value.trim();
@@ -225,8 +207,8 @@ Strictly return ONLY raw JSON without markdown or codeblocks matching this exact
 }`;
 
       try {
-        const targetModel = await getAvailableModel(apiKey);
-        const url = `https://generativelanguage.googleapis.com/v1beta/${targetModel}:generateContent?key=${apiKey}`;
+        // সরাসরি অনুমোদিত gemini-3.6-flash মডেল কল করা হচ্ছে
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
         const parts = [{ text: prompt }];
         if (promptText) {
