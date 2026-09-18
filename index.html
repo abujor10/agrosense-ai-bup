@@ -49,19 +49,24 @@
                     class="w-full text-sm p-3.5 rounded-2xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-stone-50/40"></textarea>
         </div>
 
+        <!-- Image Upload Area (Fixed Label Trigger) -->
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">আক্রান্ত পাতার ছবি (Computer Vision Analysis)</label>
-          <div class="border-2 border-dashed border-stone-300 hover:border-emerald-500 rounded-2xl p-5 text-center cursor-pointer bg-stone-50" onclick="document.getElementById('imageInput').click()">
-            <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImagePreview(event)">
+          
+          <label for="imageInput" class="block border-2 border-dashed border-stone-300 hover:border-emerald-500 rounded-2xl p-6 text-center cursor-pointer bg-stone-50 transition">
+            <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImagePreview(this)">
+            
             <div id="uploadPlaceholder">
-              <span class="text-2xl">📸</span>
-              <p class="text-xs font-bold text-stone-700 mt-1">ক্লিক করে পাতার ছবি আপলোড করুন</p>
+              <span class="text-3xl">📸</span>
+              <p class="text-sm font-bold text-stone-700 mt-2">ক্লিক করে ছবি আপলোড করুন অথবা ছবি তুলুন</p>
+              <p class="text-xs text-stone-400 mt-0.5">JPG, PNG, WebP সাপোর্টেড</p>
             </div>
-            <div id="imagePreviewContainer" class="hidden flex flex-col items-center gap-2">
-              <img id="imagePreview" src="" alt="Crop Preview" class="max-h-40 rounded-xl object-contain border">
-              <button type="button" onclick="removeImage(event)" class="text-xs text-red-600 font-bold">ছবি সরান</button>
+
+            <div id="imagePreviewContainer" class="hidden flex flex-col items-center gap-3">
+              <img id="imagePreview" src="" alt="Crop Preview" class="max-h-48 rounded-xl object-contain border border-stone-300 shadow-sm">
+              <span class="text-xs text-red-600 font-bold hover:underline" onclick="removeImage(event)">ছবি পরিবর্তন বা মুছুন</span>
             </div>
-          </div>
+          </label>
         </div>
 
         <button onclick="analyzeCropData()" id="submitBtn" 
@@ -122,25 +127,32 @@
     let uploadedImageMimeType = null;
     let fullReportBengali = "";
 
-    function handleImagePreview(event) {
-      const file = event.target.files[0];
+    function handleImagePreview(inputElement) {
+      const file = inputElement.files[0];
       if (!file) return;
-      uploadedImageMimeType = file.type;
+
+      uploadedImageMimeType = file.type || "image/jpeg";
       const reader = new FileReader();
+
       reader.onload = function(e) {
+        // Data URL থেকে বিশুদ্ধ Base64 স্ট্রিং আলাদা করা
         uploadedImageBase64 = e.target.result.split(',')[1];
+        
         document.getElementById('imagePreview').src = e.target.result;
         document.getElementById('uploadPlaceholder').classList.add('hidden');
         document.getElementById('imagePreviewContainer').classList.remove('hidden');
       };
+
       reader.readAsDataURL(file);
     }
 
     function removeImage(event) {
+      event.preventDefault();
       event.stopPropagation();
       uploadedImageBase64 = null;
       uploadedImageMimeType = null;
       document.getElementById('imageInput').value = "";
+      document.getElementById('imagePreview').src = "";
       document.getElementById('uploadPlaceholder').classList.remove('hidden');
       document.getElementById('imagePreviewContainer').classList.add('hidden');
     }
@@ -151,7 +163,7 @@
       const outputCard = document.getElementById('outputCard');
 
       if (!promptText && !uploadedImageBase64) {
-        alert("অনুগ্রহ করে ফসলের সমস্যা লিখুন অথবা একটি ছবি আপলোড করুন।");
+        alert("অনুগ্রহ করে ফসলের সমস্যা লিখুন অথবা একটি পাতার ছবি আপলোড করুন।");
         return;
       }
 
