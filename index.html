@@ -20,12 +20,10 @@
 </head>
 <body class="bg-[#FAF8F5] text-stone-900 min-h-screen antialiased">
 
-  <!-- Top Announcement Bar -->
   <div class="bg-emerald-900 text-emerald-100 text-xs py-2 px-4 text-center font-medium no-print">
-    🌾 BUP CSE Fest 2026: এআই-চালিত স্মার্ট কৃষি, রোগ নির্ণয় ও ন্যায্য বাজার নেটওয়ার্ক
+    🌾 BUP CSE Fest 2026: ফুল-স্ট্যাক এআই আর্কিটেকচার (Secure Serverless Backend)
   </div>
 
-  <!-- Navbar -->
   <header class="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-30 no-print">
     <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -41,7 +39,6 @@
     </div>
   </header>
 
-  <!-- Main Container -->
   <main class="max-w-4xl mx-auto px-6 py-8">
     <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-stone-200/70 mb-8 no-print">
       <div class="space-y-5">
@@ -52,7 +49,6 @@
                     class="w-full text-sm p-3.5 rounded-2xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-stone-50/40"></textarea>
         </div>
 
-        <!-- Image Upload Area -->
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">আক্রান্ত পাতার ছবি (Computer Vision Analysis)</label>
           <div class="border-2 border-dashed border-stone-300 hover:border-emerald-500 rounded-2xl p-5 text-center cursor-pointer bg-stone-50" onclick="document.getElementById('imageInput').click()">
@@ -75,7 +71,7 @@
       </div>
     </div>
 
-    <!-- Output Dashboard (Digital Crop Health Card) -->
+    <!-- Output Dashboard -->
     <div id="outputCard" class="hidden space-y-6">
       <div id="printableCard" class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-stone-200">
         
@@ -106,7 +102,6 @@
           </div>
         </div>
 
-        <!-- Audio Voiceout & Download Card -->
         <div class="mt-8 pt-4 border-t border-stone-200 flex flex-wrap items-center justify-between gap-3 no-print">
           <button onclick="speakReport()" class="flex items-center gap-2 text-xs font-bold bg-stone-100 hover:bg-stone-200 text-stone-800 px-4 py-2.5 rounded-xl border">
             <span>🔊</span> <span>পরামর্শ বাংলায় শুনুন</span>
@@ -121,8 +116,7 @@
   </main>
 
   <script>
-    // আপনার ক্লাউডফ্লেয়ার ব্যাকএন্ড URL
-    const BACKEND_URL = "https://agrosense-backend.azanbro2020.workers.dev";
+    const BACKEND_URL = "https://agrosense-backend.azanbro2020.workers.dev";[cite: 10]
 
     let uploadedImageBase64 = null;
     let uploadedImageMimeType = null;
@@ -176,7 +170,11 @@
         });
 
         const data = await response.json();
-        if (data.error) throw new Error(data.error);
+        
+        if (data.error) {
+          const errMsg = typeof data.error === 'object' ? JSON.stringify(data.error) : data.error;
+          throw new Error(errMsg);
+        }
 
         let text = data.candidates[0].content.parts[0].text;
         text = text.replace(/```json/g, "").replace(/```/g, "").trim();
@@ -206,7 +204,7 @@
 
       } catch (err) {
         console.error(err);
-        alert("ব্যাকএন্ড সংযোগে সমস্যা: " + err.message);
+        alert("ব্যাকএন্ড বার্তা: " + err.message);
       } finally {
         btn.disabled = false;
         btn.innerText = "স্বয়ংক্রিয় এআই বিশ্লেষণ";
