@@ -49,25 +49,24 @@
                     class="w-full text-sm p-3.5 rounded-2xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-stone-50/40"></textarea>
         </div>
 
-        <!-- Direct Standard File Input -->
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">আক্রান্ত পাতার ছবি (Computer Vision Analysis)</label>
           <div class="p-4 border border-stone-200 rounded-2xl bg-stone-50">
-            <input type="file" id="imageInput" accept="image/*" class="block w-full text-xs text-stone-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-700 file:text-white hover:file:bg-emerald-800 cursor-pointer" onchange="processImage(event)">
+            <input type="file" id="imageInput" accept="image/*" class="block w-full text-xs text-stone-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-700 file:text-white hover:file:bg-emerald-800 cursor-pointer">
             
             <div id="previewArea" class="hidden mt-4 pt-4 border-t border-stone-200 flex items-center gap-4">
               <img id="imagePreview" src="" alt="Preview" class="h-24 w-24 rounded-xl object-cover border border-stone-300 shadow-sm">
               <div>
-                <p id="imageStatus" class="text-xs font-bold text-emerald-700">ছবি প্রস্তুত হয়েছে</p>
+                <p class="text-xs font-bold text-emerald-700">ছবি লোড হয়েছে</p>
                 <button type="button" onclick="clearImage()" class="text-xs text-red-600 font-bold hover:underline mt-1">ছবি বাদ দিন</button>
               </div>
             </div>
           </div>
         </div>
 
-        <button onclick="analyzeCropData()" id="submitBtn" 
-                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-2xl transition shadow-lg flex justify-center items-center gap-2">
-          <span>স্বয়ংক্রিয় এআই বিশ্লেষণ</span>
+        <button type="button" onclick="analyzeCropData()" id="submitBtn" 
+                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-2xl transition shadow-lg flex justify-center items-center gap-2 cursor-pointer">
+          <span id="btnText">স্বয়ংক্রিয় এআই বিশ্লেষণ</span>
         </button>
       </div>
     </div>
@@ -123,36 +122,28 @@
     let uploadedImageMimeType = "image/jpeg";
     let fullReportBengali = "";
 
-    // ক্লায়েন্ট-সাইড ইমেজ রিসাইজিং এবং কম্প্রেশন (যাতে ব্যাকএন্ড ক্র্যাশ না করে)
-    function processImage(event) {
+    // সরাসরি ইভেন্ট লিসেনার দিয়ে ফাইল রিড করা
+    document.getElementById('imageInput').addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (!file) return;
 
+      uploadedImageMimeType = file.type || "image/jpeg";
       const reader = new FileReader();
+
       reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement("canvas");
-          const MAX_WIDTH = 800; // ছবিকে ৮০০ পিক্সেলের ভেতর স্কেল করে সাইজ কমানো হচ্ছে
-          const scaleSize = MAX_WIDTH / img.width;
-          canvas.width = MAX_WIDTH;
-          canvas.height = img.height * scaleSize;
-
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-          // ০.৭ কোয়ালিটিতে কম্প্রেস করে দ্রুতগতির ডাটা তৈরি
-          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7);
-          uploadedImageBase64 = compressedDataUrl.split(",")[1];
-          uploadedImageMimeType = "image/jpeg";
-
-          document.getElementById("imagePreview").src = compressedDataUrl;
-          document.getElementById("previewArea").classList.remove("hidden");
-        };
-        img.src = e.target.result;
+        const fullData = e.target.result;
+        uploadedImageBase64 = fullData.split(',')[1];
+        
+        document.getElementById("imagePreview").src = fullData;
+        document.getElementById("previewArea").classList.remove("hidden");
       };
+
+      reader.onerror = function() {
+        alert("ছবি রিড করতে সমস্যা হয়েছে!");
+      };
+
       reader.readAsDataURL(file);
-    }
+    });
 
     function clearImage() {
       uploadedImageBase64 = null;
@@ -161,17 +152,19 @@
     }
 
     async function analyzeCropData() {
-      const promptText = document.getElementById('cropIssue').value.trim();
+      const promptInput = document.getElementById('cropIssue');
+      const promptText = promptInput ? promptInput.value.trim() : "";
       const btn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
       const outputCard = document.getElementById('outputCard');
 
       if (!promptText && !uploadedImageBase64) {
-        alert("অনুগ্রহ করে সমস্যার বিবরণ লিখুন অথবা একটি ছবি নির্বাচন করুন।");
+        alert("অনুগ্রহ করে ফসলের লক্ষণ লিখুন অথবা একটি ছবি নির্বাচন করুন।");
         return;
       }
 
       btn.disabled = true;
-      btn.innerText = "ব্যাকএন্ড প্রসেসিং ও এআই বিশ্লেষণ চলছে...";
+      btnText.innerText = "বিশ্লেষণ করা হচ্ছে...";
 
       try {
         const response = await fetch(BACKEND_URL, {
@@ -219,10 +212,10 @@
 
       } catch (err) {
         console.error(err);
-        alert("ব্যাকএন্ড বার্তা: " + err.message);
+        alert("সমস্যা দেখা দিয়েছে: " + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerText = "স্বয়ংক্রিয় এআই বিশ্লেষণ";
+        btnText.innerText = "স্বয়ংক্রিয় এআই বিশ্লেষণ";
       }
     }
 
