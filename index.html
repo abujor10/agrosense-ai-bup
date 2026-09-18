@@ -27,7 +27,7 @@
     <!-- Input Card -->
     <div class="bg-white rounded-2xl p-6 shadow-sm border border-stone-200 mb-8">
       <h2 class="text-lg font-bold text-stone-900 mb-2">ফসলের সমস্যা বা বাজার দর লিখুন</h2>
-      <p class="text-sm text-stone-500 mb-4">লক্ষণ, ফসলের নাম বা ফড়িয়াদের প্রস্তাবিত পাইকারি দর বিস্তারিত লিখুন।</p>
+      <p class="text-sm text-stone-500 mb-4">লক্ষণ, ফসলের নাম বা ফড়িয়াদের প্রস্তাবিত পাইকারি দর বিস্তারিত লিখুন।</p>
       
       <div class="space-y-4">
         <div>
@@ -38,7 +38,7 @@
 
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">সমস্যার বিবরণ</label>
-          <textarea id="cropIssue" rows="4" placeholder="উদাহরণ: ধানের পাতায় বাদামি দাগ পড়েছে এবং ডগা শুকিয়ে যাচ্ছে। অথবা: আড়তদার আলুর মণ ৪০০ টাকা দিতে চাচ্ছে..."
+          <textarea id="cropIssue" rows="4" placeholder="উদাহরণ: টমেটো গাছের পাতা হলুদ হয়ে পোকা উড়ছে..."
                     class="w-full text-sm p-3 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"></textarea>
         </div>
 
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <!-- Output Card (Hidden by default) -->
+    <!-- Output Card -->
     <div id="outputCard" class="hidden bg-white rounded-2xl p-6 shadow-sm border border-stone-200">
       <div class="flex items-center justify-between mb-4 border-b border-stone-100 pb-3">
         <h3 class="font-bold text-lg text-stone-900">AI বিশ্লেষণ ফলাফল</h3>
@@ -63,7 +63,7 @@
         </div>
 
         <div>
-          <h4 class="font-semibold text-stone-700">প্রস্তাবিত সমাধান ও কীটনাশক/সারের মাত্রা:</h4>
+          <h4 class="font-semibold text-stone-700">প্রস্তাবিত সমাধান ও চিকিৎসা:</h4>
           <ul id="treatmentList" class="list-disc pl-5 text-stone-600 mt-1 space-y-1"></ul>
         </div>
 
@@ -92,7 +92,7 @@
 
       const systemInstruction = `You are an expert Agronomist and Agricultural Market Analyst in Bangladesh.
 Analyze the user's agricultural problem or market price inquiry.
-Always return ONLY a valid JSON object matching this structure:
+Always return ONLY a valid JSON object without markdown formatting, matching this exact schema:
 {
   "urgency": "Normal" | "Moderate" | "Critical",
   "diagnosis": "Detailed root cause in plain Bangla",
@@ -101,21 +101,33 @@ Always return ONLY a valid JSON object matching this structure:
 }`;
 
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+        const payload = {
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: `${systemInstruction}\n\nFarmer Query: ${promptText}` }]
+            }
+          ]
+        };
+
+        const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [
-              { role: "user", parts: [{ text: `${systemInstruction}\n\nFarmer Query: ${promptText}` }] }
-            ],
-            generationConfig: { responseMimeType: "application/json" }
-          })
+          body: JSON.stringify(payload)
         });
 
         const data = await response.json();
-        const result = JSON.parse(data.candidates[0].content.parts[0].text);
 
-        // Render Data
+        if (data.error) {
+          throw new Error(data.error.message || "API Request Failed");
+        }
+
+        let rawText = data.candidates[0].content.parts[0].text;
+        rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+        const result = JSON.parse(rawText);
+
         document.getElementById('diseaseDiagnosis').innerText = result.diagnosis;
         document.getElementById('marketAdvice').innerText = result.marketAnalysis;
         
@@ -139,7 +151,8 @@ Always return ONLY a valid JSON object matching this structure:
 
         outputCard.classList.remove('hidden');
       } catch (err) {
-        alert("বিশ্লেষণে সমস্যা হয়েছে। API Key বা ইন্টারনেট কানেকশন চেক করুন।");
+        console.error(err);
+        alert("সমস্যার কারণ: " + err.message);
       } finally {
         btn.disabled = false;
         btn.innerText = "পরামর্শ বিশ্লেষণ করুন";
